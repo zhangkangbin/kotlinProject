@@ -1,5 +1,5 @@
 /**
- * 运算符重载
+ * 运算符重载的例子
  */
 data class Point(val x: Int, val y: Int){
 
