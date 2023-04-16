@@ -85,7 +85,44 @@ this.p$delegate.setValue(this, $$delegatedProperties[0], var1);
 }
 
  */
+
+interface List{
+
+    fun getSize():Int
+    fun listToString():String
+}
+
+class ArrayList :List{
+    override fun getSize(): Int {
+
+        return 8
+    }
+
+    fun get(){
+
+
+    }
+      override fun listToString(): String {
+        return "ArrayList"
+    }
+    operator fun getValue(nothing: Nothing?, property: KProperty<*>): List {
+        println("$nothing, thank you for  '${property.name}' to me")
+        return ArrayList()
+
+    }
+
+
+}
+
 fun main() {
+
+    val list :List by ArrayList()
+
+    list.listToString()
+    list.getSize()
+    
+    val list2 = ArrayList()
+    list2.get()
     val b = BaseImpl(10)
 
     //委托给 Derived
