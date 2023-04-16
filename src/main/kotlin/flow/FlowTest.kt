@@ -2,6 +2,7 @@ package flow
 
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -24,7 +25,7 @@ fun simpleFlow(): Flow<Int> = flow { // 流构建器
 fun main() = runBlocking<Unit> {
     //simple().forEach { value -> println(value) }
     // 启动并发的协程以验证主线程并未阻塞
-    launch {
+/*    launch {
         for (k in 1..3) {
             println("I'm not blocked $k")
             delay(1000)
@@ -32,4 +33,27 @@ fun main() = runBlocking<Unit> {
     }
     // 接收，收集这个流
     simpleFlow().collect { value -> println(value) }
+
+    simpleFlow().filter {
+        it==3
+    }*/
+
+    runBlocking {
+
+        repeat(3){
+            println("---------------repeat runBlocking --------------")
+            delay(1000)
+        }
+
+    }
+
+    println("---------------runBlocking end--------------")
+
+    val job = launch { // 启动一个新协程并保持对这个作业的引用
+        delay(3000L)
+        println("World!")
+    }
+    println("Hello,")
+    job.join()
+    println("---------------   job.join()--------------")
 }
