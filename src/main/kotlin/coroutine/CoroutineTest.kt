@@ -45,4 +45,9 @@ suspend fun main(): Unit = coroutineScope {
     delay(100)
     mutableSharedFlow.resetReplayCache()
     println(mutableSharedFlow.replayCache) // []
+
+    suspendCancellableCoroutine {
+
+
+    }
 }
