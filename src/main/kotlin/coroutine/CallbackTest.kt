@@ -1,6 +1,5 @@
 package coroutine
 
-import jdk.internal.vm.Continuation
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
