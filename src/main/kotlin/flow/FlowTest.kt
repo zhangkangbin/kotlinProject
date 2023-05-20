@@ -1,11 +1,11 @@
 package flow
 
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 /**
  * 这里是一次性返回。
@@ -22,38 +22,77 @@ fun simpleFlow(): Flow<Int> = flow { // 流构建器
         emit(i) // 发送下一个值
     }
 }
-fun main() = runBlocking<Unit> {
-    //simple().forEach { value -> println(value) }
-    // 启动并发的协程以验证主线程并未阻塞
-/*    launch {
-        for (k in 1..3) {
-            println("I'm not blocked $k")
-            delay(1000)
+
+suspend fun suspendCancellableCoroutineTest() {
+
+    //等待返回结果,设计一个超时
+
+    val data=withTimeoutOrNull(250) {
+
+        delay(300)
+        val call=suspendCancellableCoroutine {
+
+            it.resume("kk")
+
         }
+
+        return@withTimeoutOrNull call
+
     }
+
+    if (data==null){
+
+        println("data ==null")
+    }else{
+
+        println("data ==${data}")
+    }
+
+
+}
+
+/**
+ * 里面调用了suspendCoroutineUninterceptedOrReturn 来实现
+ */
+suspend fun withTimeoutOrNullTest() {
+
+    withTimeoutOrNull(250) {
+        println("----start----")
+
+        delay(100)
+        println("----1----")
+
+        delay(200)
+        //因为超时了，这里不会被输出
+        println("----2----")
+
+
+    }
+
+
+}
+
+suspend fun filterTest() {
+
+    for (k in 1..3) {
+        println("I'm not blocked $k")
+        delay(1000)
+    }
+
     // 接收，收集这个流
     simpleFlow().collect { value -> println(value) }
 
     simpleFlow().filter {
-        it==3
-    }*/
-
-    runBlocking {
-
-        repeat(3){
-            println("---------------repeat runBlocking --------------")
-            delay(1000)
-        }
-
+        it == 3
     }
+}
 
-    println("---------------runBlocking end--------------")
+fun main() = runBlocking<Unit> {
+    //simple().forEach { value -> println(value) }
+    // 启动并发的协程以验证主线程并未阻塞
 
-    val job = launch { // 启动一个新协程并保持对这个作业的引用
-        delay(3000L)
-        println("World!")
-    }
-    println("Hello,")
-    job.join()
-    println("---------------   job.join()--------------")
+   // withTimeoutOrNullTest()
+
+    suspendCancellableCoroutineTest()
+
 }
